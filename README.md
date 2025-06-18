@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js 15 Starter Project
 
-## Getting Started
+โปรเจคเริ่มต้นสำหรับ Next.js 15 ที่ใช้ Bun เป็น package manager
 
-First, run the development server:
+## 🚀 การติดตั้ง
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+# ติดตั้ง dependencies
+bun install
+
+# รัน development server
 bun dev
+
+# build สำหรับ production
+bun build
+
+# รัน production server
+bun start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📁 โครงสร้างโปรเจค
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+.
+├── src/
+│   ├── app/                 # App router และ pages
+│   ├── components/          # Shared components
+│   ├── lib/                 # Utility functions และ configurations
+│   ├── styles/             # Global styles
+│   ├── mocks/              # API mocking handlers
+│   │   ├── handlers/       # MSW request handlers
+│   │   └── browser.ts      # MSW browser setup
+│   └── features/           # Feature-based modules
+│       ├── auth/           # Authentication feature
+│       │   ├── components/ # Auth-specific components
+│       │   ├── hooks/      # Auth-specific hooks
+│       │   ├── api/        # Auth API endpoints
+│       │   └── types/      # Auth-related types
+│       └── [feature]/      # Other features following same pattern
+├── public/                 # Static files
+├── components.json         # shadcn/ui configuration
+├── next.config.ts         # Next.js configuration
+├── tailwind.config.ts     # Tailwind CSS configuration
+└── tsconfig.json          # TypeScript configuration
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏗️ Modular Architecture
 
-## Learn More
+โปรเจคนี้ถูกออกแบบด้วยแนวคิด Modular Architecture เพื่อให้:
 
-To learn more about Next.js, take a look at the following resources:
+- **แยกความรับผิดชอบ** - แต่ละ feature มีการจัดการโค้ดของตัวเอง
+- **ลดการพึ่งพา** - ลดการ import ข้าม feature
+- **ง่ายต่อการบำรุงรักษา** - ทีมสามารถทำงานบน feature เดียวกันได้โดยไม่กระทบส่วนอื่น
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### ตัวอย่างโครงสร้าง Feature Module
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+features/auth/
+├── components/     # Components เฉพาะของ auth
+├── hooks/         # Custom hooks สำหรับ auth
+├── api/           # API endpoints และ handlers
+├── types/         # TypeScript types และ interfaces
+└── index.ts       # Public API ของ feature
+```
 
-## Deploy on Vercel
+### การใช้งาน Feature Module
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```typescript
+// ตัวอย่างการ import จาก feature module
+import { useAuth } from '@/features/auth';
+import { LoginForm } from '@/features/auth/components';
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🎭 API Mocking
+
+โปรเจคนี้ใช้ [MSW (Mock Service Worker)](https://mswjs.io/) สำหรับการ mock API requests ในระหว่างการพัฒนา
+
+### โครงสร้าง Mocks
+
+```
+src/mocks/
+├── handlers/              # API request handlers
+│   ├── auth.ts           # Auth-related mocks
+│   └── [feature].ts      # Other feature mocks
+└── browser.ts            # MSW browser setup
+```
+
+### การใช้งาน Mocks
+
+```typescript
+// ตัวอย่างการสร้าง mock handler
+import { http, HttpResponse } from 'msw'
+
+export const authHandlers = [
+  http.post('/api/auth/login', () => {
+    return HttpResponse.json({
+      user: { id: 1, name: 'Test User' },
+      token: 'mock-jwt-token'
+    })
+  })
+]
+```
+
+### การเปิดใช้งาน Mocks
+
+```typescript
+// src/app/layout.tsx
+if (process.env.NODE_ENV === 'development') {
+  const { worker } = require('@/mocks/browser')
+  worker.start()
+}
+```
+
+## ✨ Features และ Libraries ที่สำคัญ
+
+### UI และ Styling
+- **shadcn/ui** - Component library ที่ใช้ Radix UI
+- **Tailwind CSS** - Utility-first CSS framework
+- **Framer Motion** - Animation library
+
+### Internationalization
+- **next-intl** - Internationalization สำหรับ Next.js
+
+### State Management & Data Fetching
+- **TanStack Query** - Data fetching และ caching
+
+### Development Tools
+- **TypeScript** - Type safety
+- **ESLint** - Code linting
+- **MSW** - API mocking
+
+## 🔧 การตั้งค่าเพิ่มเติม
+
+### Environment Variables
+สร้างไฟล์ `.env.local` และกำหนดค่าต่อไปนี้:
+```env
+NEXT_PUBLIC_API_URL=your_api_url
+```
+
+### Theme Configuration
+โปรเจคนี้ใช้ `next-themes` สำหรับ dark/light mode สามารถปรับแต่งได้ใน `src/lib/theme.ts`
+
+## 📝 License
+
+MIT
