@@ -23,6 +23,11 @@ const menuItems = [
     icon: LayoutDashboard
   },
   {
+    title: "Task Manage",
+    href: "/task-kanban",
+    icon: Users
+  },
+  {
     title: "Users",
     href: "/dashboard/users",
     icon: Users
