@@ -1,0 +1,22 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "login": "Login",
+    "register": "Register",
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "home": {
+    "title": "Welcome to our website",
+    "description": "This is a multilingual website"
+  },
+  "login": {
+    "subTitle": "Please enter your credentials to login",
+    "labelUsername": "Username",
+    "PlaceholderUsername": "Enter your username",
+    "labelPassword": "Password",
+    "PlaceholderPassword": "Enter your password",
+    "pendingProcressLogin": "Logging in..."
+  }
+} 
